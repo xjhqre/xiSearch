@@ -2,6 +2,7 @@ import glob
 import os
 import pickle
 import sys
+import time
 
 import numpy as np
 from PyQt5.QtCore import QThread, pyqtSignal
@@ -11,9 +12,6 @@ import mainUI
 from feature_extractor import FeatureExtractor
 
 allowTypes = [".jpg", ".jpeg", ".gif", ".png", ".JPG", ".JPEG", ".GIF", ".PNG"]
-features = []  # 图片特征向量集合
-feature_ndarry = None
-img_paths = []  # 图片路径集合
 fe = FeatureExtractor()  # 特征提取器
 configFile = 'config.ini'
 # 创建配置文件对象
@@ -38,8 +36,8 @@ class MainWindow(mainUI.Ui_MainWindow, QMainWindow):
         self.searchButton.clicked.connect(self.searchImgEvent)
         # 提取特征按钮点击事件
         self.excuteButton.clicked.connect(self.extractFeatureEvent)
-        # 加载特征按钮点击事件
-        self.loadFeatureButton.clicked.connect(self.loadFeatureButtonEvent)
+        # # 加载特征按钮点击事件
+        # self.loadFeatureButton.clicked.connect(self.loadFeatureButtonEvent)
         # 图片库输入框改变事件
         self.galleryPathEdit.textChanged.connect(self.galleryPathFocusOutEvent)
         # 特征文件输入框文本改变事件
@@ -53,13 +51,9 @@ class MainWindow(mainUI.Ui_MainWindow, QMainWindow):
 
     # 点击搜索图片按钮事件
     def searchImgEvent(self):
-        global feature_ndarry, img_paths
 
         if self.featurePathEdit.toPlainText() == "":
             QMessageBox.information(self, '提示', '请先设置特征文件路径', QMessageBox.Yes)
-            return
-        if feature_ndarry is None:
-            QMessageBox.information(self, '提示', '请先加载特征文件', QMessageBox.Yes)
             return
         if self.imgPathEdit.toPlainText() == "":
             QMessageBox.information(self, '提示', '请设置查询图片', QMessageBox.Yes)
@@ -68,12 +62,33 @@ class MainWindow(mainUI.Ui_MainWindow, QMainWindow):
         self.loadingMsgLabel.setHidden(False)
         self.imageListWidgetUI.widget_2.setHidden(True)
 
+        dists_list = []  # 向量距离数组
+        img_path_list = []  # 图片路径数组
+
         # 解析传入图片特征并匹配
         query = fe.execute(self.imgPathEdit.toPlainText())
-        dists = np.linalg.norm(feature_ndarry - query, axis=1)  # L2 distances to features
-        ids = np.argsort(dists)[:30]  # Top 30 results
-
-        self.imageListWidgetUI.load_images(ids, img_paths)
+        featureFilesPath = glob.glob(featurePath + '/*')  # 被检索的图片路径
+        # 每次读取一个特征文件，最多包含1000个特征向量，防止一次性载入导致内存过大
+        for i, featureFilePath in enumerate(featureFilesPath):
+            pkl = pickle.load(open(featureFilePath, 'rb'))
+            features = []  # 存储特征向量，最大size为1000
+            img_paths = []  # 存储图片路径，最大size为1000
+            for v in pkl.values():
+                features.append(v['feature'])
+                img_paths.append(v['path'])
+            feature_ndarry = np.array(features)
+            img_paths_ndarry = np.array(img_paths)
+            dists = np.linalg.norm(feature_ndarry - query, axis=1)  # 1000个距离值
+            ids = np.argsort(dists)[:30]  # 从小到大排序，取前30个，ids为最小30个值的下标
+            dists = dists[ids]  # 1000张图片里30张最相似图片的距离
+            img_paths_ndarry = img_paths_ndarry[ids]  # 1000张图片里30张最相似图片的路径
+            dists_list.extend(list(dists))
+            img_path_list.extend(list(img_paths_ndarry))
+        dists_list = np.array(dists_list)
+        img_path_list = np.array(img_path_list)
+        index_list = np.argsort(dists_list)[:30]  # 所有特征文件中最相似的30个向量的下标
+        img_path_list = img_path_list[index_list]  # 所有图片中最相似的30张图片路径
+        self.imageListWidgetUI.load_images(img_path_list)
         self.imageListWidgetUI.widget_2.setHidden(False)
         self.loadingMsgLabel.setHidden(True)
 
@@ -87,26 +102,9 @@ class MainWindow(mainUI.Ui_MainWindow, QMainWindow):
             return
         self.extractFeature.start()
 
-    # 加载特征按钮点击事件
-    def loadFeatureButtonEvent(self):
-        if featurePath == "":
-            QMessageBox.information(self, '提示', '请设置特征文件路径', QMessageBox.Yes)
-            return
-        global features, feature_ndarry, img_paths
-        try:
-            img_pkl = pickle.load(open(featurePath, 'rb'))
-            for value in img_pkl.values():
-                features.append(value['feature'])
-                img_paths.append(value['path'])
-            feature_ndarry = np.array(features)
-            QMessageBox.information(self, '提示', '加载完成', QMessageBox.Yes)
-        except Exception as e:
-            QMessageBox.information(self, '提示', '请输入正确的路径', QMessageBox.Yes)
-            return
-
-    # 图片库输入框失去焦点事件
+    # 图片库输入文本框改变事件
     def galleryPathFocusOutEvent(self):
-        print(self.galleryPathEdit.toPlainText())
+        # print(self.galleryPathEdit.toPlainText())
         config.read(configFile)
         try:
             config.add_section("SETTINGS")
@@ -120,9 +118,9 @@ class MainWindow(mainUI.Ui_MainWindow, QMainWindow):
         with open(configFile, "w") as config_file:
             config.write(config_file)
 
-    # 特征文件输入框失去焦点事件
+    # 特征文件输入文本框改变事件
     def featurePathFocusOutEvent(self):
-        print(self.featurePathEdit.toPlainText())
+        # print(self.featurePathEdit.toPlainText())
         config.read(configFile)
         try:
             config.add_section("SETTINGS")
@@ -151,9 +149,11 @@ class ExtractFeatureThread(QThread):
         super(ExtractFeatureThread, self).__init__()
 
     def run(self):
+        time_start = time.time()  # 记录开始时间
         trainPath = glob.glob(galleryPath)  # 被检索的图片路径
         total = len(trainPath)
-        cnt = 0
+        featureFileCnt = 1
+        cnt = 1
         img_pkl = {}
         errorImg = []  # 出错文件集合
         for i, image in enumerate(trainPath):
@@ -161,7 +161,7 @@ class ExtractFeatureThread(QThread):
             (filename, extension) = os.path.splitext(image)
 
             if extension == '.ini':
-                total -=1
+                total -= 1
                 continue
             elif extension not in allowTypes:
                 print("格式出错：" + image)
@@ -177,9 +177,18 @@ class ExtractFeatureThread(QThread):
             else:
                 img_v = {'path': image, 'feature': feature}
                 img_pkl[cnt] = img_v
-                cnt += 1
-                self.processSignal.emit(int((cnt)*100 / total))
+                self.processSignal.emit(int(cnt * 100 / total))
                 print("当前图片：" + image + " ---> " + str(cnt))
+                cnt += 1
+                if (i + 1) % 1000 == 0:
+                    # 保存特征到本地
+                    pickle.dump(img_pkl, open(featurePath + '\\img_pkl_' + str(featureFileCnt), 'wb'))
+                    featureFileCnt += 1
+                    img_pkl.clear()
+        if img_pkl != {}:
+            pickle.dump(img_pkl, open(featurePath + '\\img_pkl_' + str(featureFileCnt), 'wb'))
+            featureFileCnt += 1
+            img_pkl.clear()
 
         # 打印失败文件信息
         if len(errorImg) != 0:
@@ -187,21 +196,13 @@ class ExtractFeatureThread(QThread):
             for image in errorImg:
                 print(image)
 
-        # 保存特征到本地
-        pickle.dump(img_pkl, open(featurePath, 'wb'))
+        time_end = time.time()  # 记录结束时间
+        time_sum = time_end - time_start  # 计算的时间差为程序的执行时间，单位为秒/s
+        print("提取特征文件耗时：" + str(time_sum) + " 秒")
 
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    # 初始化
-    try:
-        img_pkl = pickle.load(open(featurePath, 'rb'))
-        for value in img_pkl.values():
-            features.append(value['feature'])
-            img_paths.append(value['path'])
-        feature_ndarry = np.array(features)
-    except Exception:
-        pass
 
     pages_window = MainWindow()
     pages_window.show()

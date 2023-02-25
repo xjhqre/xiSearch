@@ -35,7 +35,7 @@ class ImageListWidgetUI(QWidget):
         self.qScrollArea.setWidget(self.widget_2)
         self.setWindowTitle("Flow Layout")
 
-    def load_images(self, ids,  paths):
+    def load_images(self, paths):
         # 清空之前的查询结果
         widget_list = list(range(self.flow_layout.count()))
         widget_list.reverse()  # 倒序删除，避免影响布局顺序
@@ -46,8 +46,7 @@ class ImageListWidgetUI(QWidget):
             if item.widget():
                 item.widget().deleteLater()
 
-        for index in ids:
-            img_path = paths[index]
+        for img_path in paths:
             image_reader = QImageReader()
             image_reader.setFileName(img_path)
             image_size = image_reader.size()
@@ -82,7 +81,7 @@ class ImageListWidgetUI(QWidget):
 
 # 图片标签插槽函数
 def label_click_event(img_path):
-    print(img_path)
+    # print(img_path)
     clipboard = QApplication.clipboard()
     clipboard.setText(img_path)
 
