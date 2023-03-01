@@ -24,6 +24,9 @@ resnet50 提取图片特征向量，numpy 进行向量近似度计算
 > 支持一般常见格式：jpg、png、gif、jpeg，gif只提取第一帧
 >
 > pyinstaller版本：4.5.1
+> 
+> 需要安装 MSVC 14.0
+> https://visualstudio.microsoft.com/zh-hans/visual-cpp-build-tools/
 
 ## 图片展示
 

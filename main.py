@@ -8,11 +8,13 @@ import numpy as np
 from PyQt5.QtCore import QThread, pyqtSignal
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox
 import configparser
+
+from image_match.goldberg import ImageSignature
+
 import mainUI
-from feature_extractor import FeatureExtractor
 
 allowTypes = [".jpg", ".jpeg", ".gif", ".png", ".JPG", ".JPEG", ".GIF", ".PNG"]
-fe = FeatureExtractor()  # 特征提取器
+gis = ImageSignature()  # 特征提取器
 configFile = 'config.ini'
 # 创建配置文件对象
 config = configparser.ConfigParser()
@@ -66,24 +68,24 @@ class MainWindow(mainUI.Ui_MainWindow, QMainWindow):
         img_path_list = []  # 图片路径数组
 
         # 解析传入图片特征并匹配
-        query = fe.execute(self.imgPathEdit.toPlainText())
+        query = gis.generate_signature(self.imgPathEdit.toPlainText())
         featureFilesPath = glob.glob(featurePath + '/*')  # 被检索的图片路径
         # 每次读取一个特征文件，最多包含1000个特征向量，防止一次性载入导致内存过大
         for i, featureFilePath in enumerate(featureFilesPath):
             pkl = pickle.load(open(featureFilePath, 'rb'))
-            features = []  # 存储特征向量，最大size为1000
+            dists = []  # 图片距离值集合
             img_paths = []  # 存储图片路径，最大size为1000
             for v in pkl.values():
-                features.append(v['feature'])
+                dists.append(gis.normalized_distance(query, v['signature']))
                 img_paths.append(v['path'])
-            feature_ndarry = np.array(features)
+            dists_ndarry = np.array(dists)
             img_paths_ndarry = np.array(img_paths)
-            dists = np.linalg.norm(feature_ndarry - query, axis=1)  # 1000个距离值
-            ids = np.argsort(dists)[:30]  # 从小到大排序，取前30个，ids为最小30个值的下标
-            dists = dists[ids]  # 1000张图片里30张最相似图片的距离
+            ids = np.argsort(dists_ndarry)[:30]  # 从小到大排序，取前30个，ids为最小30个值的下标
+            dists_ndarry = dists_ndarry[ids]  # 1000张图片里30张最相似图片的距离
             img_paths_ndarry = img_paths_ndarry[ids]  # 1000张图片里30张最相似图片的路径
-            dists_list.extend(list(dists))
+            dists_list.extend(list(dists_ndarry))
             img_path_list.extend(list(img_paths_ndarry))
+
         dists_list = np.array(dists_list)
         img_path_list = np.array(img_path_list)
         index_list = np.argsort(dists_list)[:30]  # 所有特征文件中最相似的30个向量的下标
@@ -170,13 +172,13 @@ class ExtractFeatureThread(QThread):
                 continue
 
             try:
-                feature = fe.execute(image)  # 提取特征向量
+                signature = gis.generate_signature(image)  # 生成图片签名
             except Exception as e:
                 print("出现异常：" + str(e))
                 total -= 1
                 errorImg.append(image)
             else:
-                img_v = {'path': image, 'feature': feature}
+                img_v = {'path': image, 'signature': signature}
                 img_pkl[cnt] = img_v
                 self.processSignal.emit(int(cnt * 100 / total))
                 print("当前图片：" + image + " ---> " + str(cnt))
