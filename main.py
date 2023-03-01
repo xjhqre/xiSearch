@@ -165,6 +165,7 @@ class ExtractFeatureThread(QThread):
                 continue
             elif extension not in allowTypes:
                 print("格式出错：" + image)
+                total -= 1
                 errorImg.append(image)
                 continue
 
@@ -197,7 +198,7 @@ class ExtractFeatureThread(QThread):
                 print(image)
 
         time_end = time.time()  # 记录结束时间
-        time_sum = time_end - time_start  # 计算的时间差为程序的执行时间，单位为秒/s
+        time_sum = time_end - time_start
         print("提取特征文件耗时：" + str(time_sum) + " 秒")
 
 
