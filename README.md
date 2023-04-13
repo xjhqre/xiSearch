@@ -28,6 +28,6 @@ resnet50 提取图片特征向量，numpy 进行向量近似度计算
 
 ## 图片展示
 
-![4](https://typora-xjhqre.oss-cn-hangzhou.aliyuncs.com/img/202304131528140.png)
+![1](https://typora-xjhqre.oss-cn-hangzhou.aliyuncs.com/img/202304132312251.png)
 
-![5](https://typora-xjhqre.oss-cn-hangzhou.aliyuncs.com/img/202304131529110.png)
+![2](https://typora-xjhqre.oss-cn-hangzhou.aliyuncs.com/img/202304132312549.png)
