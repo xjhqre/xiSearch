@@ -7,13 +7,6 @@ from PyQt5.QtCore import QThread, pyqtSignal
 
 from feature_extractor import fe
 
-total = 0  # 文件目录下的支持的图片总数
-cnt = 0  # 当前提取图片的索引
-featureFileCnt = 1  # 生成特征文件的索引
-img_pkl = {}  # 特征向量字典
-errorImg = []  # 出错文件集合
-pickleStorage = 1000  # 设置每个pickle文件存储多少特征向量
-
 
 # 提取特征线程
 class ExtractFeature(QThread):
@@ -21,6 +14,7 @@ class ExtractFeature(QThread):
     galleryPath = ''
     featurePath = ''
     allowTypes = []
+    pickleStorage = 20  # 设置每个pickle文件存储多少特征向量
 
     def __init__(self, galleryPath, featurePath, allowTypes):
         super(ExtractFeature, self).__init__()
@@ -29,7 +23,11 @@ class ExtractFeature(QThread):
         self.allowTypes = allowTypes
 
     def extract(self, galleryPath):
-        global featureFileCnt, cnt, total
+        cnt = 0  # 当前提取图片的索引
+        img_pkl = {}  # 特征向量字典
+        errorImg = []  # 出错文件集合
+        featurePathList = glob.glob(os.path.join(self.featurePath, '*.pkl'))  # 被检索的图片路径
+        featureFileCnt = len(featurePathList) + 1
         imagePathList = glob.glob(galleryPath)  # 被检索的图片路径
         total = len(imagePathList)
         # 获取支持的图片文件总数
@@ -51,13 +49,13 @@ class ExtractFeature(QThread):
                 cnt += 1
                 self.processSignal.emit(int(cnt * 100 / total))
                 print("当前图片：" + imgPath + " ---> " + str(cnt))
-                if cnt % pickleStorage == 0:
+                if cnt % self.pickleStorage == 0:
                     # 保存特征到本地
-                    pickle.dump(img_pkl, open(self.featurePath + '\\img_pkl_' + str(featureFileCnt), 'wb'))
+                    pickle.dump(img_pkl, open(self.featurePath + '\\img_' + str(featureFileCnt) + '.pkl', 'wb'))
                     featureFileCnt += 1
                     img_pkl.clear()
         if img_pkl != {}:
-            pickle.dump(img_pkl, open(self.featurePath + '\\img_pkl_' + str(featureFileCnt), 'wb'))
+            pickle.dump(img_pkl, open(self.featurePath + '\\img_' + str(featureFileCnt) + '.pkl', 'wb'))
             featureFileCnt += 1
             img_pkl.clear()
 
