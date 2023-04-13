@@ -110,8 +110,8 @@ class MainWindow(mainUI.Ui_MainWindow, QMainWindow):
             self.progressBar.setValue(0)
 
     # 图片搜索完成事件
-    def searchCompleteEvent(self, img_path_list):
-        self.imageListWidgetUI.load_images(img_path_list)
+    def searchCompleteEvent(self, img_name_ndarray):
+        self.imageListWidgetUI.load_images(img_name_ndarray, galleryPath)
         self.imageListWidgetUI.widget_2.setHidden(False)
         self.loadingMsgLabel.setHidden(True)
 

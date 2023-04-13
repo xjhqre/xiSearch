@@ -22,34 +22,34 @@ class ImageSearch(QThread):
         except Exception as e:
             print("出现异常：" + str(e))
         else:
+            total_similarity_list = []  # 总相似度数组
+            total_img_name_list = []  # 总图片名称数组
             featureFilePathList = glob.glob(self.featurePath + '/*')  # 特征文件路径列表
             # 每次读取一个特征文件，最多包含1000个特征向量，防止一次性载入导致内存过大
-            similarity_list = []  # 向量距离数组
-            img_path_list = []  # 图片路径数组
             for i, featureFilePath in enumerate(featureFilePathList):
                 pkl = pickle.load(open(featureFilePath, 'rb'))
-                features = []  # 存储特征向量，最大size为1000
-                img_paths = []  # 存储图片路径，最大size为1000
+                feature_list = []  # 特征向量数组
+                img_name_list = []  # 存储图片名称
                 for v in pkl.values():
-                    features.append(v['feature'])
-                    img_paths.append(v['path'])
-                feature_ndarry = np.array(features)
-                img_paths_ndarry = np.array(img_paths)
-                dists = []
-                for vec2 in feature_ndarry:
+                    feature_list.append(v['feature'])
+                    img_name_list.append(v['name'])
+                feature_ndarray = np.array(feature_list)
+                img_name_ndarray = np.array(img_name_list)
+                similarity_list = []  # 一个特征向量文件中的余弦相似度数组，值域为 [-1, 1]，值越小越相似
+                for vec2 in feature_ndarray:
                     cos_sim = feature.dot(vec2) / (np.linalg.norm(feature) * np.linalg.norm(vec2))
-                    dists.append(cos_sim)
-                dists = np.linalg.norm(feature_ndarry - feature, axis=1)  # 1000个距离值
-                ids = np.argsort(dists)[:30]  # 从dists数组中选择距离最近的30个向量，并返回这些向量在feature_ndarry中的索引
-                dists = dists[ids]  # 1000张图片里30张最相似图片的距离
-                img_paths_ndarry = img_paths_ndarry[ids]  # 1000张图片里30张最相似图片的路径
-                similarity_list.extend(list(dists))
-                img_path_list.extend(list(img_paths_ndarry))
-            similarity_list = np.array(similarity_list)
-            img_path_list = np.array(img_path_list)
-            index_list = np.argsort(similarity_list)[:30]  # 所有特征文件中最相似的30个向量的下标
-            img_path_list = img_path_list[index_list]  # 所有图片中最相似的30张图片路径
-            return img_path_list
+                    similarity_list.append(0 - cos_sim)
+                similarity_ndarray = np.array(similarity_list)
+                ids = np.argsort(similarity_ndarray)[:30]  # 从 similarity_ndarray 中选择30个最小的值的索引
+                similarity_ndarray = similarity_ndarray[ids]  # 一个特征向量文件中最小的30个相似度
+                img_name_ndarray = img_name_ndarray[ids]  # 一个特征向量文件中最相似的30张图片的名称
+                total_similarity_list.extend(list(similarity_ndarray))
+                total_img_name_list.extend(list(img_name_ndarray))
+            total_similarity_ndarray = np.array(total_similarity_list)
+            total_img_name_ndarray = np.array(total_img_name_list)
+            index_list = np.argsort(total_similarity_ndarray)[:30]  # 所有特征文件中最小的30个相似度的下标
+            total_img_name_ndarray = total_img_name_ndarray[index_list]  # 所有特征文件中最相似的30张图片名称
+            return total_img_name_ndarray
 
     def run(self):
         img_path_list = self.do_search(self.imgPathEdit)

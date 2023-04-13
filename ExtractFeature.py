@@ -35,6 +35,7 @@ class ExtractFeature(QThread):
         # 获取支持的图片文件总数
         for i, imgPath in enumerate(imagePathList):
             (filename, extension) = os.path.splitext(imgPath)
+            img_name = os.path.basename(imgPath)
             if extension not in self.allowTypes:
                 total -= 1
                 continue
@@ -45,7 +46,7 @@ class ExtractFeature(QThread):
                 total -= 1
                 errorImg.append(imgPath)
             else:
-                img_v = {'path': imgPath, 'feature': feature}
+                img_v = {'name': img_name, 'feature': feature}
                 img_pkl[cnt] = img_v
                 cnt += 1
                 self.processSignal.emit(int(cnt * 100 / total))
@@ -68,7 +69,7 @@ class ExtractFeature(QThread):
 
     def run(self):
         time_start = time.time()  # 记录开始时间
-        self.extract(self.galleryPath)
+        self.extract(self.galleryPath + "/*")
         time_end = time.time()  # 记录结束时间
         time_sum = time_end - time_start
         print("提取特征文件耗时：" + str(time_sum) + " 秒")

@@ -21,10 +21,10 @@ QLayout的parent可以是QWidget或者QLayout;
 
 
 class ImageListWidgetUI(QWidget):
-    def __init__(self, *args, **kwargs):
+    def __init__(self):
         super().__init__()
         self.resize(950, 700)
-        self.imageHeight = 150 # 图片高度设置
+        self.imageHeight = 150  # 图片高度设置
         self.flow_layout = FlowLayout(self)
         self.widget = QWidget()
         self.widget_2 = QWidget()
@@ -35,7 +35,7 @@ class ImageListWidgetUI(QWidget):
         self.qScrollArea.setWidget(self.widget_2)
         self.setWindowTitle("Flow Layout")
 
-    def load_images(self, paths):
+    def load_images(self, img_name_ndarray, galleryPath):
         # 清空之前的查询结果
         widget_list = list(range(self.flow_layout.count()))
         widget_list.reverse()  # 倒序删除，避免影响布局顺序
@@ -46,15 +46,15 @@ class ImageListWidgetUI(QWidget):
             if item.widget():
                 item.widget().deleteLater()
 
-        for img_path in paths:
-            image_reader = QImageReader()
-            image_reader.setFileName(img_path)
-            image_size = image_reader.size()
+        for img_name in img_name_ndarray:
+            reader = QImageReader()
+            reader.setFileName(galleryPath + "/" + img_name)
+            image_size = reader.size()
             autoWidth = image_size.width() * self.imageHeight / image_size.height()
             autoWidth = int(autoWidth)
             image_size.scale(QSize(self.imageHeight, autoWidth), Qt.IgnoreAspectRatio)
-            image_reader.setScaledSize(image_size)
-            pixmap = image_reader.read()
+            reader.setScaledSize(image_size)
+            pixmap = reader.read()
             if pixmap.isNull():
                 continue
             imgLabel = MyQLabel()
@@ -63,9 +63,9 @@ class ImageListWidgetUI(QWidget):
             imgLabel.setFixedHeight(self.imageHeight)
             imgLabel.setFixedWidth(autoWidth)
             imgLabel.setToolTip("点击即可复制路径")  # 气泡提示
-            imgLabel.connect_customized_slot(partial(label_click_event, img_path))
+            imgLabel.connect_customized_slot(partial(label_click_event, galleryPath + "/" + img_name))
             nameLabel = MyQLabel()
-            nameLabel.setText(img_path)
+            nameLabel.setText(galleryPath + "/" + img_name)
             nameLabel.setWordWrap(True)
             # 图片和名称垂直布局
             vboxLayOut = QVBoxLayout()
