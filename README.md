@@ -12,7 +12,7 @@ resnet50 提取图片特征向量，numpy 进行向量近似度计算
 
 可以下载打包好的程序，运行 main.exe ， 或者下载代码运行 main.py 文件
 
-1. 第一次启动程序后，到特征抽取界面设置**图片库路径**和**特征文件保存路径**
+1. 第一次启动程序后，到特征抽取界面设置图片库路径和特征文件保存路径
 2. 点击提取特征按钮
 3. 点击加载特征
 4. 到图片搜索界面搜索
@@ -24,12 +24,10 @@ resnet50 提取图片特征向量，numpy 进行向量近似度计算
 > 支持一般常见格式：jpg、png、gif、jpeg，gif只提取第一帧
 >
 > pyinstaller版本：4.5.1
-> 
-> 需要安装 MSVC 14.0
-> https://visualstudio.microsoft.com/zh-hans/visual-cpp-build-tools/
+
 
 ## 图片展示
 
-![image-20230225172034063](https://typora-xjhqre.oss-cn-hangzhou.aliyuncs.com/img/image-20230225172034063.png)
+![4](https://typora-xjhqre.oss-cn-hangzhou.aliyuncs.com/img/202304131528140.png)
 
-![image-20230224152415795](https://typora-xjhqre.oss-cn-hangzhou.aliyuncs.com/img/image-20230224152415795.png)
+![5](https://typora-xjhqre.oss-cn-hangzhou.aliyuncs.com/img/202304131529110.png)
