@@ -1,6 +1,10 @@
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QLabel
 
+'''
+自定义标签，响应点击事件
+'''
+
 
 class MyQLabel(QLabel):
     # 自定义信号, 注意信号必须为类属性
@@ -15,4 +19,3 @@ class MyQLabel(QLabel):
     # 可在外部与槽函数连接
     def connect_customized_slot(self, func):
         self.button_clicked_signal.connect(func)
-

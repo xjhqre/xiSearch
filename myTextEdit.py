@@ -1,5 +1,9 @@
 from PyQt5 import QtWidgets
 
+'''
+自定义拖入事件，删除file:///前缀
+'''
+
 
 class MyTextEdit(QtWidgets.QTextEdit):
 

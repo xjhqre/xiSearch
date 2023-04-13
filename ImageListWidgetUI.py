@@ -81,7 +81,6 @@ class ImageListWidgetUI(QWidget):
 
 # 图片标签插槽函数
 def label_click_event(img_path):
-    # print(img_path)
     clipboard = QApplication.clipboard()
     clipboard.setText(img_path)
 

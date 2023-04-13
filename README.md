@@ -4,9 +4,7 @@ github地址： [https://github.com/xjhqre/xiSearch](https://github.com/xjhqre/x
 
 ## 实现方法
 
-resnet50 提取图片特征向量，numpy 进行向量近似度计算
-
-界面使用 pyqt5 制作
+使用 [towhee](https://hub.towhee.io/) 实现，界面使用 pyqt5 制作
 
 ## 使用方法
 
@@ -14,7 +12,6 @@ resnet50 提取图片特征向量，numpy 进行向量近似度计算
 
 1. 第一次启动程序后，到特征抽取界面设置图片库路径和特征文件保存路径
 2. 点击提取特征按钮
-3. 点击加载特征
 4. 到图片搜索界面搜索
 
 > 图片库路径写法：F:/ACG/壁纸/*，表示加载壁纸文件夹下所有图片
@@ -23,11 +20,23 @@ resnet50 提取图片特征向量，numpy 进行向量近似度计算
 >
 > 支持一般常见格式：jpg、png、gif、jpeg，gif只提取第一帧
 >
-> pyinstaller版本：4.5.1
-
 
 ## 图片展示
 
-![4](https://typora-xjhqre.oss-cn-hangzhou.aliyuncs.com/img/202304131528140.png)
+![dsdffffffff](https://typora-xjhqre.oss-cn-hangzhou.aliyuncs.com/img/202304121546196.png)
 
-![5](https://typora-xjhqre.oss-cn-hangzhou.aliyuncs.com/img/202304131529110.png)
+![2](https://typora-xjhqre.oss-cn-hangzhou.aliyuncs.com/img/202304121536495.png)
+
+
+
+## BUG解决
+
+1、pytorch OSError: could not get source code
+
+解决方案：https://github.com/pyinstaller/pyinstaller/issues/5729
+
+2、pyinstaller 和 opencv-python 兼容问题
+
+pyinstaller 版本改成 4.9
+
+opencv-python 版本改成 4.5.3.56

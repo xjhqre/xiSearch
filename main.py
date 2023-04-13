@@ -1,12 +1,18 @@
 import configparser
+import os
 import sys
 
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox
 
 import mainUI
-from ExtractFeature import ExtractFeature
-from ImageSearch import ImageSearch
+from ExtractFeatureClass import ExtractFeatureClass
+from ImageSearchClass import ImageSearchClass
 
+'''
+主启动类
+'''
+
+# ----------------------- 全局变量 --------------------------- #
 configFile = 'config.ini'
 # 创建配置文件对象
 config = configparser.ConfigParser()
@@ -14,20 +20,22 @@ config = configparser.ConfigParser()
 config.read(configFile, encoding='utf-8')
 galleryPath = config.get("SETTINGS", "galleryPath")
 featurePath = config.get("SETTINGS", "featurePath")
-allowTypes = config.get("SETTINGS", "allowTypes")
 
 
 class MainWindow(mainUI.Ui_MainWindow, QMainWindow):
+
     def __init__(self):
         super(MainWindow, self).__init__()
         self.setupUi(self)
-        self.extractFeature = ExtractFeature(galleryPath, featurePath, allowTypes)
+        self.extractFeature = ExtractFeatureClass()
         self.extractFeature.processSignal.connect(self.progressBarEvent)
-        self.imageSearch = ImageSearch(featurePath)
-        self.imageSearch.completeSignal.connect(self.searchCompleteEvent)
+        self.imgSearchClass = ImageSearchClass()
+        self.imgSearchClass.completeSignal.connect(self.searchCompleteEvent)
         self.galleryPathEdit.setText(galleryPath)
         self.featurePathEdit.setText(featurePath)
+        # 图片搜索按钮切换页面事件
         self.imgsearchPageButton.clicked.connect(self.display1)
+        # 特征抽取按钮切换页面事件
         self.excutePageButton.clicked.connect(self.display2)
         # 搜索按钮点击事件
         self.searchButton.clicked.connect(self.searchImgEvent)
@@ -38,9 +46,11 @@ class MainWindow(mainUI.Ui_MainWindow, QMainWindow):
         # 特征文件输入框文本改变事件
         self.featurePathEdit.textChanged.connect(self.featurePathFocusOutEvent)
 
+    # 切换到第一个控件页面
     def display1(self):
         self.stackedWidget.setCurrentIndex(0)
 
+    # 切换到第二个控件页面
     def display2(self):
         self.stackedWidget.setCurrentIndex(1)
 
@@ -56,9 +66,9 @@ class MainWindow(mainUI.Ui_MainWindow, QMainWindow):
         self.loadingMsgLabel.setHidden(False)
         self.imageListWidgetUI.widget_2.setHidden(True)
         # 解析传入图片特征并匹配
-        self.imageSearch.imgPathEdit = self.imgPathEdit.toPlainText()
+        self.imgSearchClass.imgPathEdit = self.imgPathEdit.toPlainText()
         # 开启图片搜索线程
-        self.imageSearch.start()
+        self.imgSearchClass.start()
 
     # 提取图片库特征事件
     def extractFeatureEvent(self):
@@ -72,6 +82,7 @@ class MainWindow(mainUI.Ui_MainWindow, QMainWindow):
 
     # 图片库输入文本框改变事件
     def galleryPathFocusOutEvent(self):
+        # print(self.galleryPathEdit.toPlainText())
         config.read(configFile, encoding='utf-8')
         try:
             config.add_section("SETTINGS")
@@ -88,6 +99,7 @@ class MainWindow(mainUI.Ui_MainWindow, QMainWindow):
 
     # 特征文件输入文本框改变事件
     def featurePathFocusOutEvent(self):
+        # print(self.featurePathEdit.toPlainText())
         config.read(configFile, encoding='utf-8')
         try:
             config.add_section("SETTINGS")

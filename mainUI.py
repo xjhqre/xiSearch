@@ -142,7 +142,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "以图搜图   作者：xjhqre"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "xiSearch   作者：xjhqre"))
         self.imgPathLabel.setText(_translate("MainWindow", "图片路径(可拖放)："))
         self.searchButton.setText(_translate("MainWindow", "搜索"))
         self.loadingMsgLabel.setText(_translate("MainWindow", "正在加载特征文件，请稍后"))
