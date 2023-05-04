@@ -14,7 +14,7 @@ class ExtractFeature(QThread):
     galleryPath = ''
     featurePath = ''
     allowTypes = []
-    pickleStorage = 20  # 设置每个pickle文件存储多少特征向量
+    pickleStorage = 1000  # 设置每个pickle文件存储多少特征向量
 
     def __init__(self, galleryPath, featurePath, allowTypes):
         super(ExtractFeature, self).__init__()
