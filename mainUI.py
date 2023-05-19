@@ -53,10 +53,10 @@ class Ui_MainWindow(object):
         # 搜索按钮
         self.search_button = QtWidgets.QPushButton(self.search_page_widget)
         self.search_button.setGeometry(QtCore.QRect(870, 30, 80, 40))
-        font = QtGui.QFont()
-        font.setFamily("Arial")
-        font.setPointSize(12)
-        self.search_button.setFont(font)
+        # font = QtGui.QFont()
+        # font.setFamily("Arial")
+        # font.setPointSize(12)
+        # self.search_button.setFont(font)
         self.search_button.setObjectName("searchButton")
         # 图片流动布局
         self.vertical_layout_widget = QtWidgets.QWidget(self.search_page_widget)

@@ -46,6 +46,7 @@ class MainWindow(mainUI.Ui_MainWindow, QMainWindow):
             return
         self.loading_msg_label.setText("正在搜索图片，请稍后")
         self.loading_msg_label.setHidden(False)
+        self.search_button.setEnabled(False)
         self.image_list_widget_ui.widget.setHidden(True)
         # 开启图片搜索线程
         self.image_search_thread.start()
@@ -57,6 +58,8 @@ class MainWindow(mainUI.Ui_MainWindow, QMainWindow):
             return
         # 清空日志文本框
         self.extract_message.clear()
+        # 禁用按钮
+        self.excute_button.setEnabled(False)
         self.extract_feature_thread.start()
 
     # 图片库输入文本框改变事件
@@ -73,9 +76,12 @@ class MainWindow(mainUI.Ui_MainWindow, QMainWindow):
         self.image_list_widget_ui.load_images(img_path_list)
         self.image_list_widget_ui.widget.setHidden(False)
         self.loading_msg_label.setHidden(True)
+        self.search_button.setEnabled(True)
 
     # 特征提取完成事件
     def extract_complete_event(self):
+        # 开启按钮
+        self.excute_button.setEnabled(True)
         QMessageBox.information(self, '提示', '特征提取完成', QMessageBox.Yes)
 
 
