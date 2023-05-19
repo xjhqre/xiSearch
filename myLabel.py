@@ -3,6 +3,10 @@ from PyQt5.QtWidgets import QLabel
 
 
 class MyQLabel(QLabel):
+    """
+    实现点击复制标签路径信息
+    """
+
     # 自定义信号, 注意信号必须为类属性
     button_clicked_signal = QtCore.pyqtSignal()
 

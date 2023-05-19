@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'untitled.ui'
+# Form implementation generated from reading ui file 'mainUI.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.4
 #
@@ -9,6 +9,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QTextEdit
 
 import myTextEdit
 from ImageListWidgetUI import ImageListWidgetUI
@@ -28,90 +29,84 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.frame_2.sizePolicy().hasHeightForWidth())
         self.frame_2.setSizePolicy(sizePolicy)
         self.frame_2.setObjectName("frame_2")
-        self.stackedWidget = QtWidgets.QStackedWidget(self.frame_2)
-        self.stackedWidget.setGeometry(QtCore.QRect(0, 0, 1000, 850))
-        self.stackedWidget.setObjectName("stackedWidget")
-        self.searchPageWidget = QtWidgets.QWidget()
-        self.searchPageWidget.setObjectName("searchPageWidget")
-        self.imgPathLabel = QtWidgets.QLabel(self.searchPageWidget)
-        self.imgPathLabel.setGeometry(QtCore.QRect(10, 30, 190, 40))
+
+        # 分页器
+        self.stacked_widget = QtWidgets.QStackedWidget(self.frame_2)
+        self.stacked_widget.setGeometry(QtCore.QRect(0, 0, 1000, 850))
+        self.stacked_widget.setObjectName("stackedWidget")
+
+        # 搜索页面
+        self.search_page_widget = QtWidgets.QWidget()
+        self.search_page_widget.setObjectName("searchPageWidget")
+        # 搜索图片路径标签
+        self.img_path_label = QtWidgets.QLabel(self.search_page_widget)
+        self.img_path_label.setGeometry(QtCore.QRect(10, 30, 190, 40))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(12)
-        self.imgPathLabel.setFont(font)
-        self.imgPathLabel.setObjectName("imgPathLabel")
-        self.imgPathEdit = myTextEdit.MyTextEdit(self.searchPageWidget)
-        self.imgPathEdit.setGeometry(QtCore.QRect(230, 30, 600, 40))
-        self.imgPathEdit.setObjectName("imgPathEdit")
-        self.searchButton = QtWidgets.QPushButton(self.searchPageWidget)
-        self.searchButton.setGeometry(QtCore.QRect(870, 30, 80, 40))
+        self.img_path_label.setFont(font)
+        self.img_path_label.setObjectName("imgPathLabel")
+        # 搜索图片路径输入框
+        self.img_path_edit = myTextEdit.MyTextEdit(self.search_page_widget)
+        self.img_path_edit.setGeometry(QtCore.QRect(230, 30, 600, 40))
+        self.img_path_edit.setObjectName("imgPathEdit")
+        # 搜索按钮
+        self.search_button = QtWidgets.QPushButton(self.search_page_widget)
+        self.search_button.setGeometry(QtCore.QRect(870, 30, 80, 40))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(12)
-        self.searchButton.setFont(font)
-        self.searchButton.setObjectName("searchButton")
+        self.search_button.setFont(font)
+        self.search_button.setObjectName("searchButton")
         # 图片流动布局
-        # self.scrollArea = QtWidgets.QScrollArea(self.searchPageWidget)
-        self.verticalLayoutWidget = QtWidgets.QWidget(self.searchPageWidget)
-        self.verticalLayoutWidget.setGeometry(QtCore.QRect(10, 90, 950, 700))
-        self.verticalLayoutWidget.setObjectName("verticalLayoutWidget")
-        self.verticalLayout = QtWidgets.QVBoxLayout(self.verticalLayoutWidget)
-        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
-        self.verticalLayout.setObjectName("verticalLayout")
-        self.imageListWidgetUI = ImageListWidgetUI()
-        self.imageListWidgetUI.setGeometry(QtCore.QRect(10, 90, 950, 700))
-        self.verticalLayout.addWidget(self.imageListWidgetUI)
-        # 加载特征消息提示
-        self.loadingMsgLabel = QtWidgets.QLabel(self.verticalLayoutWidget)
-        self.loadingMsgLabel.setGeometry(QtCore.QRect(260, 300, 420, 40))
+        self.vertical_layout_widget = QtWidgets.QWidget(self.search_page_widget)
+        self.vertical_layout_widget.setGeometry(QtCore.QRect(10, 90, 950, 700))
+        self.vertical_layout_widget.setObjectName("verticalLayoutWidget")
+        self.vertical_layout = QtWidgets.QVBoxLayout(self.vertical_layout_widget)
+        self.vertical_layout.setContentsMargins(0, 0, 0, 0)
+        self.vertical_layout.setObjectName("verticalLayout")
+        self.image_list_widget_ui = ImageListWidgetUI()
+        self.image_list_widget_ui.setGeometry(QtCore.QRect(10, 90, 950, 700))
+        self.vertical_layout.addWidget(self.image_list_widget_ui)
+        # 搜索图片消息提示：正在搜索图片，请稍后
+        self.loading_msg_label = QtWidgets.QLabel(self.vertical_layout_widget)
+        self.loading_msg_label.setGeometry(QtCore.QRect(260, 300, 420, 40))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(15)
-        self.loadingMsgLabel.setFont(font)
-        self.loadingMsgLabel.setObjectName("loadingMsgLabel")
-        self.loadingMsgLabel.setHidden(True)
+        self.loading_msg_label.setFont(font)
+        self.loading_msg_label.setObjectName("loadingMsgLabel")
+        self.loading_msg_label.setHidden(True)
 
+        self.stacked_widget.addWidget(self.search_page_widget)
 
-        self.stackedWidget.addWidget(self.searchPageWidget)
-        self.excutePageWidget = QtWidgets.QWidget()
-        self.excutePageWidget.setObjectName("excutePageWidget")
-        self.galleryPathLabel = QtWidgets.QLabel(self.excutePageWidget)
-        self.galleryPathLabel.setGeometry(QtCore.QRect(10, 30, 200, 40))
+        # 提取特征页面
+        self.excute_page_widget = QtWidgets.QWidget()
+        self.excute_page_widget.setObjectName("excutePageWidget")
+        # 图片库路径标签，图片库地址：
+        self.gallery_path_label = QtWidgets.QLabel(self.excute_page_widget)
+        self.gallery_path_label.setGeometry(QtCore.QRect(30, 30, 200, 40))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(12)
-        self.galleryPathLabel.setFont(font)
-        self.galleryPathLabel.setObjectName("galleryPathLabel")
-        self.featurePathLabel = QtWidgets.QLabel(self.excutePageWidget)
-        self.featurePathLabel.setGeometry(QtCore.QRect(10, 90, 200, 40))
-        font = QtGui.QFont()
-        font.setFamily("Arial")
-        font.setPointSize(12)
-        self.featurePathLabel.setFont(font)
-        self.featurePathLabel.setObjectName("featurePathLabel")
-        self.galleryPathEdit = myTextEdit.MyTextEdit(self.excutePageWidget)
-        self.galleryPathEdit.setGeometry(QtCore.QRect(240, 30, 600, 40))
-        self.galleryPathEdit.setObjectName("galleryPathEdit")
-        self.featurePathEdit = myTextEdit.MyTextEdit(self.excutePageWidget)
-        self.featurePathEdit.setGeometry(QtCore.QRect(240, 90, 600, 40))
-        self.featurePathEdit.setObjectName("featurePathEdit")
-        self.excuteButton = QtWidgets.QPushButton(self.excutePageWidget)
-        self.excuteButton.setGeometry(QtCore.QRect(400, 200, 100, 40))
-        self.excuteButton.setObjectName("excuteButton")
-        self.progressBar = QtWidgets.QProgressBar(self.excutePageWidget)
-        self.progressBar.setGeometry(QtCore.QRect(230, 320, 500, 30))
-        self.progressBar.setProperty("value", 0)
-        self.progressBar.setObjectName("progressBar")
-        self.progressBar.setMinimum(0)
-        self.progressBar.setMaximum(100)
-        self.processLabel = QtWidgets.QLabel(self.excutePageWidget)
-        self.processLabel.setGeometry(QtCore.QRect(100, 320, 100, 30))
-        font = QtGui.QFont()
-        font.setFamily("Arial")
-        font.setPointSize(11)
-        self.processLabel.setFont(font)
-        self.processLabel.setObjectName("processLabel")
-        self.stackedWidget.addWidget(self.excutePageWidget)
+        self.gallery_path_label.setFont(font)
+        self.gallery_path_label.setObjectName("galleryPathLabel")
+        # 图片库路径输入框
+        self.gallery_path_edit = myTextEdit.MyTextEdit(self.excute_page_widget)
+        self.gallery_path_edit.setGeometry(QtCore.QRect(240, 30, 600, 40))
+        self.gallery_path_edit.setObjectName("galleryPathEdit")
+        # 提取特征按钮
+        self.excute_button = QtWidgets.QPushButton(self.excute_page_widget)
+        self.excute_button.setGeometry(QtCore.QRect(430, 120, 100, 40))
+        self.excute_button.setObjectName("excuteButton")
+
+        # 提取日志文本框
+        self.extract_message = myTextEdit.MyTextEdit(self.excute_page_widget)
+        self.extract_message.setReadOnly(True)
+        self.extract_message.setGeometry(QtCore.QRect(130, 200, 750, 550))
+
+        self.stacked_widget.addWidget(self.excute_page_widget)
+
         self.frame = QtWidgets.QFrame(self.centralwidget)
         self.frame.setEnabled(True)
         self.frame.setGeometry(QtCore.QRect(0, 0, 200, 850))
@@ -121,12 +116,15 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.frame.sizePolicy().hasHeightForWidth())
         self.frame.setSizePolicy(sizePolicy)
         self.frame.setObjectName("frame")
-        self.imgsearchPageButton = QtWidgets.QPushButton(self.frame)
-        self.imgsearchPageButton.setGeometry(QtCore.QRect(50, 50, 90, 40))
-        self.imgsearchPageButton.setObjectName("imgsearchPageButton")
-        self.excutePageButton = QtWidgets.QPushButton(self.frame)
-        self.excutePageButton.setGeometry(QtCore.QRect(50, 120, 90, 40))
-        self.excutePageButton.setObjectName("excutePageButton")
+
+        # 切换图片搜索页面按钮
+        self.img_search_page_button = QtWidgets.QPushButton(self.frame)
+        self.img_search_page_button.setGeometry(QtCore.QRect(50, 50, 90, 40))
+        self.img_search_page_button.setObjectName("imgsearchPageButton")
+        # 切换提取特征页面按钮
+        self.excute_page_button = QtWidgets.QPushButton(self.frame)
+        self.excute_page_button.setGeometry(QtCore.QRect(50, 120, 90, 40))
+        self.excute_page_button.setObjectName("excutePageButton")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1245, 23))
@@ -137,18 +135,15 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
-        self.stackedWidget.setCurrentIndex(0)
+        self.stacked_widget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "以图搜图   作者：xjhqre"))
-        self.imgPathLabel.setText(_translate("MainWindow", "图片路径(可拖放)："))
-        self.searchButton.setText(_translate("MainWindow", "搜索"))
-        self.loadingMsgLabel.setText(_translate("MainWindow", "正在加载特征文件，请稍后"))
-        self.galleryPathLabel.setText(_translate("MainWindow", "图片库地址："))
-        self.featurePathLabel.setText(_translate("MainWindow", "特征文件保存地址："))
-        self.excuteButton.setText(_translate("MainWindow", "提取特征"))
-        self.processLabel.setText(_translate("MainWindow", "提取进度："))
-        self.imgsearchPageButton.setText(_translate("MainWindow", "图片搜索"))
-        self.excutePageButton.setText(_translate("MainWindow", "特征抽取"))
+        self.img_path_label.setText(_translate("MainWindow", "图片路径(可拖放)："))
+        self.search_button.setText(_translate("MainWindow", "搜索"))
+        self.gallery_path_label.setText(_translate("MainWindow", "图片库地址："))
+        self.excute_button.setText(_translate("MainWindow", "提取特征"))
+        self.img_search_page_button.setText(_translate("MainWindow", "图片搜索"))
+        self.excute_page_button.setText(_translate("MainWindow", "特征抽取"))
