@@ -21,7 +21,7 @@ def dump(img_names, img_emb):
 
 
 # 提取特征方法
-def extract():
+def extract(message_signal):
     # 错误图片列表
     error_img = []
     time_start = time.time()  # 记录开始时间
@@ -29,7 +29,7 @@ def extract():
     # 过滤掉其他文件
     img_names = [name for name in img_names if os.path.splitext(name)[1] in config.allow_types]
 
-    print("开始提取图片特征")
+    message_signal.emit("开始提取图片特征\n")
 
     img_emb = None
     img_path_list = []
@@ -51,7 +51,7 @@ def extract():
                 dump(img_path_list, img_emb)
                 img_path_list.clear()
                 img_emb = None
-            print("当前图片：", filepath, " - ", cnt)
+            message_signal.emit("当前图片：" + filepath + " - " + str(cnt) + "\n")
             cnt += 1
         except Exception as e:
             # 图片打开失败
@@ -64,12 +64,12 @@ def extract():
 
     time_end = time.time()  # 记录结束时间
     time_sum = time_end - time_start
-    print("提取特征耗时：" + str(time_sum) + " 秒")
+    message_signal.emit("提取特征耗时：" + str(time_sum) + " 秒\n")
 
     if error_img:
-        print("提取失败图片:")
+        message_signal.emit("提取失败图片:\n")
         for path in error_img:
-            print(path)
+            message_signal.emit(path + "\n")
 
 
 # 搜索图片

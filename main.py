@@ -18,7 +18,7 @@ class MainWindow(mainUI.Ui_MainWindow, QMainWindow):
         # 提取图片特征线程
         self.extract_feature_thread = extract_feature_thread.ExtractFeatureThread()
         self.extract_feature_thread.complete_signal.connect(self.extract_complete_event)
-        self.extract_feature_thread.output_written.connect(self.extract_message.insertPlainText)
+        self.extract_feature_thread.message_signal.connect(self.extract_message.insertPlainText)
         # 图片库路径输入框
         self.gallery_path_edit.setText(config.gallery_path)
         # 切换到图片搜索页面按钮
