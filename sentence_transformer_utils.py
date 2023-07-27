@@ -73,14 +73,17 @@ def extract(message_signal):
 
 
 # 搜索图片
-def search(query, k=30):
+def search(query, error_signal, k=30):
     if not os.path.exists(config.feature_path):
-        print("没有特征文件")
-        return
+        error_signal.emit("没有设置特征文件路径")
+        return []
 
     img_names = []
     img_emb = None
     feature_list = list(glob.glob(config.feature_path + "*"))
+    if len(feature_list) == 0:
+        error_signal.emit("请先提取特征文件")
+        return []
     for feature_path in feature_list:
         with open(feature_path, 'rb') as fIn:
             names, emb = pickle.load(fIn)

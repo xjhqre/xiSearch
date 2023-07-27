@@ -2,6 +2,8 @@
 
 运行 main.py 文件即可
 
+特征文件保存在 feature 文件夹
+
 打包指令
 ```shell
 pyinstaller -w --add-data "config.ini;." --copy-metadata pillow --collect-data torch --copy-metadata torch --copy-metadata tqdm --copy-metadata regex --copy-metadata requests --copy-metadata packaging --copy-metadata filelock --copy-metadata numpy --copy-metadata tokenizers main.py

@@ -10,9 +10,10 @@ class ImageSearchThread(QThread):
     """
 
     complete_signal = pyqtSignal(list)  # 搜素完成信号
+    error_signal = pyqtSignal(str) # 搜索异常信号
 
     def __init__(self):
         super(ImageSearchThread, self).__init__()
 
     def run(self):
-        self.complete_signal.emit(sentence_transformer_utils.search(config.search_img_path))
+        self.complete_signal.emit(sentence_transformer_utils.search(config.search_img_path, self.error_signal))

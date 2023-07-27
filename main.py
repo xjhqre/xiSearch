@@ -21,6 +21,7 @@ class MainWindow(mainUI.Ui_MainWindow, QMainWindow):
         # 图片搜索线程
         self.image_search_thread = ImageSearchThread()
         self.image_search_thread.complete_signal.connect(self.search_complete_event)
+        self.image_search_thread.error_signal.connect(self.search_error_event)
         # 提取图片特征线程
         self.extract_feature_thread = extract_feature_thread.ExtractFeatureThread()
         self.extract_feature_thread.complete_signal.connect(self.extract_complete_event)
@@ -83,6 +84,14 @@ class MainWindow(mainUI.Ui_MainWindow, QMainWindow):
         self.image_list_widget_ui.widget.setHidden(False)
         self.loading_msg_label.setHidden(True)
         self.search_button.setEnabled(True)
+
+    # 特征提取失败提示事件
+    def search_error_event(self, error_msg):
+        self.image_list_widget_ui.load_images([])
+        self.image_list_widget_ui.widget.setHidden(False)
+        self.loading_msg_label.setHidden(True)
+        self.search_button.setEnabled(True)
+        QMessageBox.information(self, '提示', error_msg, QMessageBox.Yes)
 
     # 特征提取完成事件
     def extract_complete_event(self):
