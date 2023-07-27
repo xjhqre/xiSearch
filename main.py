@@ -1,6 +1,12 @@
+import os
 import sys
 
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox
+
+if sys.stdout is None:
+    sys.stdout = open(os.devnull, "w")
+if sys.stderr is None:
+    sys.stderr = open(os.devnull, "w")
 
 import config
 import extract_feature_thread
