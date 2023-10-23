@@ -1,5 +1,7 @@
 # 本地以图搜图软件
 
+推荐使用最新版：https://github.com/xjhqre/xiSearch-flet
+
 github地址： [https://github.com/xjhqre/xiSearch](https://github.com/xjhqre/xiSearch)
 
 推荐使用分支 sentence_transformer
