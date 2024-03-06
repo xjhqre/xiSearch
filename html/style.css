@@ -1,0 +1,354 @@
+/* 字体库不一定要是我这个，甚至不用也可以 */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+/* :root 表示 html 选择器 */
+/* 一些需要重复使用的样式 */
+:root {
+    /* 颜色 */
+    --body-color: #e4e9f7;
+    --sidebar-color: #fff;
+    --primary-color: #695cfe;
+    --primary-color-light: #f6f5ff;
+    --toggle-color: #ddd;
+    --text-color: #707070;
+
+    /* 过渡效果 */
+    --tran-02: all 0.2s ease;
+    --tran-03: all 0.3s ease;
+}
+
+body {
+    background-color: var(--body-color);
+    transition: var(--tran-03);
+}
+
+/*::selection选择器匹配元素中被用户选中或处于高亮状态的部分。
+
+::selection只可以应用于少数的CSS属性：color, background, cursor,和outline。*/
+::selection {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+.main {
+    display: flex;
+}
+
+/* sidebar上的初始化样式 */
+.sidebar {
+    height: 100vh;
+    width: 230px;
+    padding: 10px 14px;
+    background: var(--sidebar-color);
+    transition: var(--tran-03);
+}
+
+.sidebar.close {
+    width: 88px;
+}
+
+.sidebar .icon {
+    min-width: 60px;
+    border-radius: 6px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
+
+.sidebar .text,
+.sidebar .icon {
+    color: var(--text-color);
+    transition: var(--tran-03);
+}
+
+.sidebar .text {
+    font-size: 17px;
+    line-height: 17px;
+    /*文本不换行*/
+    white-space: nowrap;
+    /*完全不透明*/
+    opacity: 1;
+}
+
+.sidebar.close .text {
+    opacity: 0;
+
+}
+
+/* header部分样式 */
+
+.sidebar header {
+    height: 30px;
+    width: 100%;
+    position: relative;
+}
+
+.sidebar header .title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+    font-size: 22px;
+    font-weight: 600;
+    height: 100%;
+    width: 100%;
+    color: var(--text-color);
+    transition: var(--tran-03);
+}
+
+/**
+ * 伸缩箭头
+ */
+.sidebar header .toggle {
+    position: absolute;
+    top: 50%;
+    right: -25px;
+    /* 将元素先向上平移自身高度的50%，然后绕中心点顺时针旋转180度 */
+    transform: translateY(-50%) rotate(180deg);
+    height: 25px;
+    width: 25px;
+    background-color: var(--primary-color);
+    color: var(--sidebar-color);
+    display: flex;
+    border-radius: 50%;
+    /* 垂直中心 */
+    align-items: center;
+    /* 水平中心 */
+    justify-content: center;
+    font-size: 22px;
+    cursor: pointer;
+    transition: var(--tran-03);
+    /* all:任何属性变化都会发生过渡效果  0.3s:变化时长  ease:缓慢开始和缓慢结束 */
+    transition: all 0.3s ease;
+}
+
+.sidebar.close .toggle {
+    transform: translateY(-50%) rotate(0deg);
+}
+
+.sidebar .menu {
+    margin-top: 30px;
+}
+
+.sidebar .menu-bar {
+    /*元素的高度将设置为其父元素高度的百分之百减去55像素。*/
+    height: calc(100% - 55px);
+    display: flex;
+    /* 子元素垂直排序 */
+    flex-direction: column;
+    /* 均匀排列每个元素，首个元素放置于起点，末尾元素放置于终点 */
+    justify-content: space-between;
+    /* 元素超出则用滚动条 */
+    overflow-y: scroll;
+}
+
+.sidebar .menu-bar li {
+    height: 50px;
+    margin-top: 10px;
+}
+
+.sidebar .menu-bar li div {
+    /*该元素的背景色将变为透明，显示出其后面的内容或背景*/
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    cursor: pointer;
+    border-radius: 10px;
+    /* text-decoration: none; */
+    transition: var(--tran-03);
+}
+
+.sidebar .menu-bar li div:hover {
+    background-color: var(--primary-color);
+}
+
+/* 鼠标悬浮在元素上时的文字颜色 */
+.sidebar .menu-bar li div:hover .icon,
+.sidebar .menu-bar li div:hover .text {
+    color: var(--sidebar-color);
+}
+
+.sidebar .menu-bar li div span {
+    margin-left: 10px;
+}
+
+
+/* 修改基于 webkit 的浏览器的滚动条样式, 隐藏滚动条 */
+.menu-bar::-webkit-scrollbar {
+    display: none;
+}
+
+.content {
+    flex: 1;
+    height: 100vh;
+    width: 100vh;
+    padding: 50px 100px;
+}
+
+/* 图片搜索页面样式*/
+.content .page1 {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 图片搜索输入框样式*/
+.content .page1 .search-bar {
+    display: flex;
+    align-items: center;
+}
+
+/* 图片搜索输入框样式*/
+.content .page1 .search-bar input {
+    height: 50px;
+    width: 70%;
+    padding-left: 20px;
+    outline: none;
+    border: none;
+    background-color: var(--primary-color-light);
+    color: var(--text-color);
+    border-radius: 10px;
+    font-size: 17px;
+    font-weight: 500;
+    transition: var(--tran-03);
+}
+
+.content .page1 .search-bar .button {
+    margin-left: 50px;
+    width: 150px;
+    height: 50px;
+    font-size: 16px;
+    text-align: center;
+    line-height: 50px;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    background-color: var(--primary-color);
+}
+
+.content .page1 .show-img-list {
+    padding-right: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    height: 100%;
+    margin-top: 50px;
+    overflow: auto;
+    background-color: var(--primary-color-light);
+    border-radius: 10px;
+}
+
+.content .page1 .show-img-list .cell {
+    flex: 0 0 25%;
+    padding: 10px;
+}
+
+.content .page1 .show-img-list .cell img {
+    border-radius: 10px;
+    width: 100%;
+}
+
+/* 特征提取页面样式*/
+.content .page2 {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.content .page2 .head {
+    display: flex;
+    align-items: center;
+}
+
+.content .page2 .head input {
+    height: 50px;
+    width: 70%;
+    padding-left: 20px;
+    outline: none;
+    border: none;
+    background-color: var(--primary-color-light);
+    color: var(--text-color);
+    border-radius: 10px;
+    font-size: 17px;
+    font-weight: 500;
+    transition: var(--tran-03);
+}
+
+.content .page2 .head .button {
+    margin-left: 50px;
+    width: 150px;
+    height: 50px;
+    font-size: 16px;
+    text-align: center;
+    line-height: 50px;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    background-color: var(--primary-color);
+}
+
+.content .page2 .extract-log {
+    padding: 15px 20px;
+    height: 100%;
+    margin-top: 50px;
+    overflow: auto;
+    background-color: var(--primary-color-light);
+    border-radius: 10px;
+    word-wrap: break-word;
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--text-color);
+}
+
+.content .page3 {
+    display: flex;
+    align-items: start;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+
+.content .page3 .setting-item {
+    width: 100%;
+    display: flex;
+    margin-left: 50px;
+    margin-top: 40px;
+}
+
+.content .page3 .name {
+    font-size: 20px;
+    color: var(--text-color);
+    line-height: 50px;
+    text-align: center;
+    margin-right: 30px;
+}
+
+.content .page3 input {
+    width: 50%;
+    height: 50px;
+    padding-left: 20px;
+    outline: none;
+    border: none;
+    background-color: var(--primary-color-light);
+    color: var(--text-color);
+    border-radius: 10px;
+    font-size: 17px;
+    font-weight: 500;
+    transition: var(--tran-03);
+}
+
+.content .hidden-page {
+    display: none;
+}

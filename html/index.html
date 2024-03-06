@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="reset.css"/>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="stylesheet" type="text/css" href="scrollbar.css"/>
+    <link rel="stylesheet" type="text/css" href="message.css"/>
+    <link rel="stylesheet" type="text/css" href="loadButton.css"/>
+    <!-- 图标组件库 -->
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+<div class="main">
+    <!-- 侧边栏 -->
+    <div class="sidebar">
+        <header>
+            <!-- 软件标题 -->
+            <div class="text title">
+                xiSearch
+            </div>
+            <!-- 伸缩图标 -->
+            <i class="bx bx-chevron-right toggle"></i>
+        </header>
+        <!-- 菜单栏 -->
+        <div class="menu-bar">
+            <!-- 菜单 -->
+            <div class="menu">
+
+                <ul class="menu-links">
+
+                    <li id="image-search" class="nav-link">
+                        <div>
+                            <i class="bx bx-search icon"></i>
+                            <span class="text">图片搜索</span>
+                        </div>
+                    </li>
+
+                    <li id="feature-extraction" class="nav-link">
+                        <div>
+                            <i class='bx bx-download icon'></i>
+                            <span class="text">特征提取</span>
+                        </div>
+                    </li>
+
+                </ul>
+            </div>
+            <div class="bottom-content">
+                <li id="setting">
+                    <div>
+                        <i class="bx bx-cog icon"></i>
+                        <span class="text">设置</span>
+                    </div>
+                </li>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 主体内容 -->
+    <div class="content">
+        <!-- 搜索页面 -->
+        <div class="page1 ">
+            <div class="search-bar">
+                <input id="searchImagePath" type="text" placeholder="请输入搜索图片路径"/>
+                <div id="searchImageButton" class="button" onclick="searchImages()">
+                    <span>搜索图片</span>
+                </div>
+            </div>
+
+            <!-- 搜索图片结果展示 -->
+            <div class="show-img-list">
+
+            </div>
+        </div>
+
+        <!-- 提取特征页面 -->
+        <div class="page2 hidden-page">
+            <div class="head">
+                <input id="imgFolderPath" type="text" placeholder="请输入图片库地址" oninput="imgFolderPathChange();"/>
+                <div class="button" onclick="extractFeatures()">提取特征</div>
+            </div>
+
+            <!-- 提取日志 -->
+            <div class="extract-log">
+
+            </div>
+        </div>
+
+        <!-- 设置页面 -->
+        <div class="page3 hidden-page">
+            <div class="setting-item">
+                <div class="name">特征文件保存地址:</div>
+                <input id="featureFileStorageAddress" type="text" oninput="featureFileStorageAddressChange();"/>
+            </div>
+            <div class="setting-item">
+                <div class="name">搜索相似图片数量:</div>
+                <input id="searchSimilarImagesNumber" type="text" oninput="searchSimilarImagesNumberChange();"/>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="message.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

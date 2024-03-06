@@ -1,0 +1,36 @@
+/* 加载时隐藏文字 */
+.loading span {
+    visibility: hidden;
+}
+
+.loading {
+    position: relative;
+}
+
+/* ::after：用来创建一个伪元素，作为已选中元素的最后一个子元素。通常会配合content属性来为该元素添加装饰内容。这个虚拟元素默认是行内元素。*/
+.loading::after {
+    content: '';
+    height: 40%;
+    aspect-ratio: 1 / 1;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 5px solid transparent;
+    border-top-color: white;
+    border-radius: 50%;
+    /*background-color: black;*/
+    /*infinite : 无限循环，spin：旋转*/
+    animation: rotate 1s infinite;
+}
+
+/* 定义动画 */
+@keyframes rotate {
+    from {
+        transform: translate(-50%, -50%) rotate(0);
+    }
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+

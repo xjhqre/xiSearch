@@ -1,35 +1,21 @@
-# 本地以图搜图软件
+# 本地以图搜图软件xiSearch-flet
 
-推荐使用最新版：https://github.com/xjhqre/xiSearch-flet
+## 简介
 
-推荐使用分支 sentence_transformer
+使用 sentence_transformers + flet 实现
 
-## 实现方法
+项目地址：https://github.com/xjhqre/xiSearch-flet
 
-resnet50 提取图片特征向量，numpy 进行向量近似度计算
+## 使用说明
 
-界面使用 pyqt5 制作
+1、启动程序，进入设置页面，设置特征文件保存地址
 
-## 使用方法
+![image-20230811145610238](README.assets/image-20230811145610238.png)
 
-可以下载打包好的程序，运行 main.exe ， 或者下载代码运行 main.py 文件
+2、进入特征提取页面，输入要提取的图片库地址，点击特征提取按钮
 
-1. 第一次启动程序后，到特征抽取界面设置图片库路径和特征文件保存路径
-2. 点击提取特征按钮
-3. 点击加载特征
-4. 到图片搜索界面搜索
+![image-20230811165229261](README.assets/image-20230811165229261.png)
 
-> 图片库路径写法：F:/ACG/壁纸，表示加载壁纸文件夹下所有图片
-> 
-> 特征文件保存地址写法：F:/ACG/特征文件，为文件夹路径，会在该文件夹下生成多个特征文件
->
-> 支持一般常见格式：jpg、png、gif、jpeg，gif只提取第一帧
->
-> pyinstaller版本：4.5.1
+3、进入图片搜索页面搜索图片，点击图片即可复制文件路
 
-
-## 图片展示
-
-![1](https://typora-xjhqre.oss-cn-hangzhou.aliyuncs.com/img/202304132312251.png)
-
-![2](https://typora-xjhqre.oss-cn-hangzhou.aliyuncs.com/img/202304132312549.png)
+![image-20230811150235958](README.assets/image-20230811150235958.png)

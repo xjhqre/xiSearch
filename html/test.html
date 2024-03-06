@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Sidebar Example</title>
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+				margin: 0;
+				padding: 0;
+			}
+
+			.sidebar {
+				height: 100vh;
+				width: 250px;
+				background-color: #333;
+				color: white;
+				position: fixed;
+				top: 0;
+				left: 0;
+				overflow-x: hidden;
+				padding-top: 20px;
+			}
+
+			.sidebar a {
+				padding: 10px 15px;
+				text-decoration: none;
+				font-size: 18px;
+				color: white;
+				display: block;
+			}
+
+			.content {
+				margin-left: 250px;
+				padding: 20px;
+			}
+		</style>
+	</head>
+	<body>
+
+		<div class="sidebar">
+			<a href="#" onclick="changePage('home')">Home</a>
+			<a href="#" onclick="changePage('about')">About</a>
+			<a href="#" onclick="changePage('contact')">Contact</a>
+		</div>
+
+		<div class="content" id="content">
+			<h2>Welcome to the Home page</h2>
+			<p>This is the home page content.</p>
+		</div>
+
+		<script>
+			function changePage(page) {
+				const content = document.getElementById('content');
+				switch (page) {
+					case 'home':
+						content.innerHTML = '<h2>Welcome to the Home page</h2><p>This is the home page content.</p>';
+						break;
+					case 'about':
+						content.innerHTML = '<h2>About Us</h2><p>Learn more about us here.</p>';
+						break;
+					case 'contact':
+						content.innerHTML = '<h2>Contact Us</h2><p>Contact us at example@example.com</p>';
+						break;
+					default:
+						break;
+				}
+			}
+		</script>
+
+	</body>
+</html>
