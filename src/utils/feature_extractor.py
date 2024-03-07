@@ -139,14 +139,17 @@ class FeatureExtractor:
         if not os.path.isdir(img_folder_path):
             raise MyBaseException("图片文件夹路径错误")
 
-        cnt = 0  # 图片计数
-        time_start = time.time()
+        # 初始化日志属性
+        log.cnt = 0  # 图片计数
+        log.time = time.time()
+        log.error_img_path = []
+        log.finish = 0
+
         # 获取图片路径生成器
         img_path_list_generator = get_file_paths(img_folder_path, batch_size)
 
         img_path_batch = []  # 每1024个特征保存一次
         img_feature_batch = []  # 每1024个特征保存一次
-        log.extract_log = "开始提取！\n"
 
         for img_path_list in img_path_list_generator:
             # 过滤掉非图片类型的文件
@@ -158,11 +161,15 @@ class FeatureExtractor:
                 (len(img_path_list), 224, 224, 3))
 
             for i, img_path in enumerate(img_path_list):
-                img = image_process(img_path)
-                x = image.img_to_array(img)
-                x = np.expand_dims(x, axis=0)
-                x = preprocess_input(x)
-                batch_images[i % len(img_path_list)] = x  # 将图像添加到批次数组中
+                try:
+                    img = image_process(img_path)
+                    x = image.img_to_array(img)
+                    x = np.expand_dims(x, axis=0)
+                    x = preprocess_input(x)
+                    batch_images[i % len(img_path_list)] = x  # 将图像添加到批次数组中
+                except Exception:
+                    log.error_img_path.append(img_path)  # 记录错误图片路径
+                    continue
 
             # 当达到批量处理大小时或者是最后一张图像时进行处理
             feature_ndarray = self.model.predict(batch_images)  # 执行特征提取, (10, 2048)
@@ -170,10 +177,7 @@ class FeatureExtractor:
             img_path_batch.extend(img_path_list)
             img_feature_batch.extend(feature_list)
 
-            cnt += len(img_path_list)
-            time_process = time.time()
-            time_use = time_process - time_start
-            log.extract_log += "已提取图片数量：{}, 耗时：{} 秒\n".format(cnt, time_use)
+            log.cnt += len(img_path_list)
 
             # 每1024个特征保存一次
             if len(img_path_batch) >= 1024:
@@ -184,10 +188,7 @@ class FeatureExtractor:
         # 保存剩余的特征
         dump(img_path_batch, img_feature_batch)
 
-        time_end = time.time()
-        time_sum = time_end - time_start
-        log.extract_log += "提取结束，提取成功图片: {} 张, 总耗时: {} 秒\n".format(
-            cnt, time_sum)
+        log.finish = 1
 
 
 fe = FeatureExtractor()

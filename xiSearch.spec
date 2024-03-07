@@ -3,8 +3,8 @@ from PyInstaller.utils.hooks import copy_metadata
 from PyInstaller.utils.hooks import collect_data_files
 
 datas = [
-    ('D:\\workspace\\xiSearch-flet\\config.ini', '.'),
-    ('D:\\workspace\\xiSearch-flet\\html', 'html')
+    ('D:\\workspace\\xiSearch\\config.ini', '.'),
+    ('D:\\workspace\\xiSearch\\html', 'html')
 ]
 datas += copy_metadata('requests')
 datas += copy_metadata('packaging')
@@ -17,7 +17,7 @@ block_cipher = None
 
 a = Analysis(
     ['src/main.py'],
-    pathex=['D:\\workspace\\xiSearch-flet'],
+    pathex=['D:\\workspace\\xiSearch'],
     binaries=[],
     datas=datas,
     hiddenimports=[],
@@ -37,9 +37,9 @@ exe = EXE(
     a.scripts,
     [],
     exclude_binaries=True,
-    name='xiSearch-flet',
+    name='xiSearch',
     debug=False,
-    icon='D:\\workspace\\xiSearch-flet\\icon.ico',
+    icon='D:\\workspace\\xiSearch\\icon.ico',
     bootloader_ignore_signals=False,
     strip=False,
     upx=True,
@@ -58,5 +58,5 @@ coll = COLLECT(
     strip=False,
     upx=True,
     upx_exclude=[],
-    name='xiSearch-flet',
+    name='xiSearch',
 )

@@ -310,6 +310,10 @@ body {
     font-size: 16px;
     line-height: 1.5;
     color: var(--text-color);
+    /* 使日志文字可选中 */
+    -webkit-user-select: text;
+    user-select: text;
+    cursor: auto; /* 或者您希望应用的其他光标样式 */
 }
 
 .content .page3 {

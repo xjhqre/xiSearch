@@ -16,6 +16,7 @@ const featureFileStorageAddress = body.querySelector('#featureFileStorageAddress
 const searchSimilarImagesNumber = body.querySelector('#searchSimilarImagesNumber') // 搜索相似图片数量输入框
 let featureExtractionTimer = 1// 特征提取定时器
 const message = new Message() // 气泡提示消息
+let autoScroll = true;
 
 // 侧边栏伸缩按钮点击事件
 toggle.addEventListener('click', () => {
@@ -87,13 +88,17 @@ function imgFolderPathChange() {
 
 // 提取图片特征
 function extractFeatures() {
-    extractLog.innerText = ""
+    // 清空日志
+    while (extractLog.firstChild) {
+        extractLog.removeChild(extractLog.firstChild);
+    }
+    let line = document.createElement('div');
+    line.textContent = '开始提取！';
+    extractLog.appendChild(line);
 
     // 每隔1秒获取提取特征日志
     featureExtractionTimer = setInterval(getExtractionLog, 1000);
     window.pywebview.api.feature_extraction(imgFolderPath.value).then(() => {
-        // TODO 气泡提示
-        console.log("特征提取成功")
         clearInterval(featureExtractionTimer)
         getExtractionLog()
     })
@@ -103,10 +108,43 @@ function extractFeatures() {
 // 获取提取日志
 function getExtractionLog() {
     window.pywebview.api.get_extraction_log().then((response) => {
-        extractLog.innerText = response.extract_log
-        console.log(response.extract_log)
+        if (response.finish === 0) {
+            let line = document.createElement('div');
+            line.textContent = `已提取图片数量：${response.cnt} , 耗时：${response.time} 秒`;
+            extractLog.appendChild(line);
+        } else {
+            let line = document.createElement('div');
+            line.textContent = `提取完成！，共提取图片数量：${response.cnt} , 总耗时：${response.time} 秒`;
+            extractLog.appendChild(line);
+            if (response.error_img_path.length > 0) {
+                let line2 = document.createElement('div');
+                line2.textContent = `提取错误图片路径：`;
+                extractLog.appendChild(line2);
+                response.error_img_path.forEach(item => {
+                    let line3 = document.createElement('div');
+                    line3.textContent = item
+                    extractLog.appendChild(line3);
+                })
+            }
+
+
+        }
+        if (autoScroll) {
+            extractLog.scrollTop = extractLog.scrollHeight; // 滚动到底部
+        }
     })
 }
+
+// 监听滚动事件
+extractLog.addEventListener('scroll', function (event) {
+    let element = event.target;
+    // 如果滚动条位置不在底部，则停止自动滚动
+    if (element.scrollHeight - element.scrollTop !== element.clientHeight) {
+        autoScroll = false;
+    } else {
+        autoScroll = true;
+    }
+});
 
 // 搜索图片
 function searchImages() {

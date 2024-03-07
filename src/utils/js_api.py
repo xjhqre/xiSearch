@@ -1,6 +1,7 @@
 """
 JavaScript调用python接口
 """
+import time
 
 from src.config.config import config_instance
 from src.log.log import log
@@ -59,8 +60,13 @@ class Api:
         获取提取日志
         :return:
         """
+        time_process = time.time()
+        time_use = time_process - log.time
         response = {
-            'extract_log': log.extract_log
+            'cnt': log.cnt,
+            'time': int(time_use),
+            'error_img_path': log.error_img_path,
+            'finish': log.finish
         }
         return response
 
